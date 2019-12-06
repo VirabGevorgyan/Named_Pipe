@@ -51,27 +51,22 @@ def pipe_server():
                     # 1-byte character case
                     try:    
                         rtnvalue, data = win32file.ReadFile(pipe, 1, overlapped_obj1)
-                        print(data.tobytes().decode("utf-8"))
-                        msg = msg + bytes(data).decode("utf-8")
-                    
+                        msg = msg + bytes(data).decode("utf-8")                  
                     # 2-bytes character case
                     except:
                         rtnvalue, data1 = win32file.ReadFile(pipe, 1, overlapped_obj1)
                         non_unicode = data.tobytes() + data1.tobytes()
                         msg = msg + non_unicode.decode("utf-8")
-                        print(non_unicode.decode("utf-8"))
 
                     while rtnvalue == 234: # more data is available
                         
                         try: # 1-byte character case
                             rtnvalue, data = win32file.ReadFile(pipe, 1, overlapped_obj1)
-                            print("234",data.tobytes().decode("utf-8"))
                             msg = msg + bytes(data).decode("utf-8")
 
                         except: # 2-bytes character case
                             rtnvalue, data1 = win32file.ReadFile(pipe, 1, overlapped_obj1)
                             non_unicode = data.tobytes() + data1.tobytes()                          
-                            print("234",non_unicode.decode("utf-8"))
                             msg = msg + non_unicode.decode("utf-8")
 
                             
@@ -79,6 +74,8 @@ def pipe_server():
                     with codecs.open('test.txt', 'w', encoding='utf-8') as f:  
                         f.write(msg)
                     f.close()
+                    print("Successfully received and written")
+                    print("Closing Handle") 
                     exit (0)
                     
 
@@ -88,8 +85,7 @@ def pipe_server():
                 quit = True
             else:
                 print(e)
-                quit = True
-               
+                quit = True          
     win32file.CloseHandle(pipe)
     
 pipe_server()
